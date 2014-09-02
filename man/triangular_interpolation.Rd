@@ -6,13 +6,13 @@
 triangular_interpolation(xy, vals, newPts, useNearestNeighbour = TRUE)
 }
 \arguments{
-\item{xy}{= points (typically nx2 matrix)}
+\item{xy}{= point locations associated with the values to interpolate from  (typically nx2 matrix)}
 
-\item{vals}{= values at xy (can be a matix with 1 or more colums)}
+\item{vals}{= values at xy (can be a matix with 1 or more colums and the same number of rows as xy)}
 
-\item{newPts}{= points where we want interpolated values (typically nx2 matrix)}
+\item{newPts}{= points where we want interpolated values (typically mx2 matrix)}
 
-\item{useNeaestNeighbour}{= TRUE/FALSE (effect described above)}
+\item{useNearestNeighbour}{= TRUE/FALSE (effect described above)}
 }
 \value{
 matrix/vector with as many columns as 'vals' and as many rows as 'newPts', containing the 'vals' interpolated to 'newPts'

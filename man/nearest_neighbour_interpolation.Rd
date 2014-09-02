@@ -6,11 +6,11 @@
 nearest_neighbour_interpolation(xy, vals, newPts)
 }
 \arguments{
-\item{xy}{= points (typically nx2 matrix)}
+\item{xy}{= points locations associated with values to interpolation from (typically nx2 matrix)}
 
-\item{vals}{= values at xy (can be a matix with 1 or more colums)}
+\item{vals}{= values at xy (can be a matix with 1 or more colums, and the same number of rows as xy)}
 
-\item{newPts}{= points where we want interpolated values (typically nx2 matrix)}
+\item{newPts}{= points where we want interpolated values (typically mx2 matrix)}
 }
 \value{
 matrix/vector with as many columns as 'vals' and as many rows as 'newPts', containing the 'vals' interpolated to 'newPts'
