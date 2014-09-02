@@ -2,7 +2,6 @@
 #
 # Here we have functions for nearest-neighbour and triangular interpolation
 #
-# FIXME: Can later extract these into a single function
 #
     
 
@@ -127,9 +126,8 @@ triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
 
     if(!nnSort){
         # Use geometry package triangulation
-        # This is slow for large problems [tsearch is presently slow], but the
-        # best approach
-        #require(geometry) 
+        # This is slow for large problems [tsearch is presently slow], but
+        # arguably the best approach
         triIndices=delaunayn(xy)
         # Use barycentric coordinates from tsearch
         triOn=tsearch(xy[,1], xy[,2], triIndices, newPts[,1], newPts[,2], bary=TRUE)
@@ -153,7 +151,6 @@ triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
         # Hack to try to speed-up tsearch on large problems.
         # Instead of using t-search, find the 3 nearest neighbours and make a triangle
         #browser()
-        #require(SearchTrees)
         #triXY=(xy[triIndices[,1],1:2]+ xy[triIndices[,2],1:2] + xy[triIndices[,3],1:2])/3
         triTree=createTree(xy)
         # Lookup the nearest index on the tree
@@ -187,7 +184,6 @@ triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
         b[abs(area)<EPS]=0.
 
 
-        ##b = (dx21*dz31 - dx31*dz21)/area
         if(is.null(dim(vals))){
             # Find max/min 'vals' on triangle
             valsMax=pmax(vals[lookupInds[,1]], vals[lookupInds[,2]], vals[lookupInds[,3]])
@@ -222,7 +218,6 @@ triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
             # If outside min/max, use nearest neighbour only
             final = final*(1-limit) + vals[lookupInds[,1],]*limit
 
-        #    return(final)
         }
     }
     return(final)
