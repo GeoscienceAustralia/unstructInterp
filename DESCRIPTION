@@ -14,5 +14,5 @@ Description: Routines for interpolation from unstructured point data. Mainly
     wrappers around existing tools, with a focus on efficiency for applications
     with millions of points.
 License: BSD_3_clause
-URL: http://www.r-project.org
-BugReports: http://FIXME.url
+URL: http://www.r-project.org, https://github.com/GeoscienceAustralia/unstructInterp
+BugReports: https://github.com/GeoscienceAustralia/unstructInterp
