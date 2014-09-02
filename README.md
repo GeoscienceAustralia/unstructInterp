@@ -16,8 +16,11 @@ Installation
 ------------
 Make sure you have the 'devtools', 'SearchTrees', and 'geometry' package installed in R:
 >    install.packages(c('devtools','SearchTrees','geometry'))
+
 Then you can install direct from github
+
 >    install_github('GeoscienceAustralia/unstructInterp')
+
 
 Maintenance and Contributions
 -----------------------------
