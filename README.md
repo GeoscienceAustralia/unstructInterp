@@ -21,6 +21,10 @@ Then you can install direct from github
 
 >    install_github('GeoscienceAustralia/unstructInterp')
 
+To get started, look at the examples
+
+> example(nearest_neighbour_interpolation)
+> example(triangular_interpolation)
 
 Maintenance and Contributions
 -----------------------------
