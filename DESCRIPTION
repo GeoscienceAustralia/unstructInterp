@@ -1,0 +1,18 @@
+Package: unstructInterp
+Version: 0.0-1
+Date: 2014-09-01
+Title: Routines for interpolation from unstructured point data
+Authors@R: person("Gareth", "Davies", role = c("aut", "cre"),
+    email = "grothered@gmail.com")
+Author: Gareth Davies
+Maintainer: Gareth Davies <grothered@gmail.com>
+Depends:
+    R (>= 1.8.0),
+    SearchTrees,
+    geometry
+Description: Routines for interpolation from unstructured point data. Mainly
+    wrappers around existing tools, with a focus on efficiency for applications
+    with millions of points.
+License: BSD_3_clause
+URL: http://www.r-project.org
+BugReports: http://FIXME.url
