@@ -24,6 +24,7 @@ Then you can install direct from github
 To get started, look at the examples
 
 > example(nearest_neighbour_interpolation)
+>
 > example(triangular_interpolation)
 
 Maintenance and Contributions
