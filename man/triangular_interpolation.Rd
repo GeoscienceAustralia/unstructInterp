@@ -32,23 +32,13 @@ neighbours. This method is fast since it relies only an a fast nearest neighbour
    newPts=matrix(c(0.5, 0.5, 0.3, 0.3), ncol=2, byrow=TRUE)
 
    out=triangular_interpolation(xy, vals, newPts)
-   if(all(all.equal(out, c(1.0,0.6)))){
-       print('PASS')
-   }else{
-       print(out)
-       print('FAIL')
-   }
+   stopifnot(all(all.equal(out, c(1.0,0.6))))
 
    # Re-order triangle
    xy=xy[3:1,]
    vals=vals[3:1]
    out=triangular_interpolation(xy, vals, newPts)
-   if(all(all.equal(out,c(1.0,0.6)))){
-       print('PASS')
-   }else{
-       print(out)
-       print('FAIL')
-   }
+   stopifnot(all(all.equal(out,c(1.0,0.6))))
 
    #another one, with formula z=0.5*x+0.2*y+7
    xy=matrix(c(-1, -1, 1, -0.5, 0.5, 1), ncol=2,byrow=2)
@@ -56,51 +46,27 @@ neighbours. This method is fast since it relies only an a fast nearest neighbour
    newPts=matrix(c(0,0, 0.5, 0.3),ncol=2,byrow=TRUE)
    expectedVals=0.5*newPts[,1]+0.2*newPts[,2]+7
    out=triangular_interpolation(xy,vals,newPts)
-   if(all(all.equal(out,expectedVals))){
-       print('PASS')
-   }else{
-       print(out)
-       print('FAIL')
-   }
+   stopifnot(all(all.equal(out,expectedVals)))
 
    # A point outside the triangle
    newPts=matrix(c(-1,0, -1, 1),ncol=2,byrow=TRUE)
-   out=triangular_interpolation(xy,vals,newPts)
-   if(all(is.na(out))| formals(triangular_interpolation)$useNearestNeighbour){
-       print('PASS')
-   }else{
-       print(out)
-       print('FAIL')
-       print('(  Failure is expected here if using approximate triangulation based on nearest neighbour methods)')
-   }
+   out=triangular_interpolation(xy,vals,newPts,useNearestNeighbour=FALSE)
+   stopifnot(all(is.na(out))| formals(triangular_interpolation)$useNearestNeighbour)
+   # Failure is expected here if using approximate triangulation based on nearest neighbour methods
 
    # A single point
    newPts=matrix(c(0,0),ncol=2)
    out=triangular_interpolation(xy,vals,newPts)
-   if(out==7){
-       print('PASS')
-   }else{
-       print(out)
-       print('FAIL')
-   }
+   stopifnot(out==7)
 
    # Points on the triangle
    newPts=xy
    out=triangular_interpolation(xy,vals,newPts)
-   if(all(out==vals)){
-       print('PASS')
-   }else{
-       print('FAIL')
-   }
+   stopifnot(all(out==vals))
 
    # Point on an edge
    newPts=matrix(0.5*(xy[1,]+xy[2,]),ncol=2)
    out=triangular_interpolation(xy,vals,newPts)
-   if(all(out==0.5*(vals[1]+vals[2]))){
-       print('PASS')
-   }else{
-       print(out)
-       print('FAIL')
-   }
+   stopifnot(all(out==0.5*(vals[1]+vals[2])))
 }
 

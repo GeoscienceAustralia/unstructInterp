@@ -25,11 +25,6 @@ Basically a wrapper around the SearchTrees package
    newPts=matrix(c(0.1, 0.9, 0.9, 0.9), ncol=2, byrow=TRUE)
 
    out=nearest_neighbour_interpolation(xy, vals, newPts)
-   if(all(all.equal(out, c(1,2)))){
-       print('PASS')
-   }else{
-       print(out)
-       print('FAIL')
-   }
+   stopifnot(all(all.equal(out, c(1,2))))
 }
 
