@@ -32,13 +32,13 @@ neighbours. This method is fast since it relies only an a fast nearest neighbour
    newPts=matrix(c(0.5, 0.5, 0.3, 0.3), ncol=2, byrow=TRUE)
 
    out=triangular_interpolation(xy, vals, newPts)
-   stopifnot(all(all.equal(out, c(1.0,0.6))))
+   stopifnot(all.equal(out, c(1.0,0.6)))
 
    # Re-order triangle
    xy=xy[3:1,]
    vals=vals[3:1]
    out=triangular_interpolation(xy, vals, newPts)
-   stopifnot(all(all.equal(out,c(1.0,0.6))))
+   stopifnot(all.equal(out,c(1.0,0.6)))
 
    #another one, with formula z=0.5*x+0.2*y+7
    xy=matrix(c(-1, -1, 1, -0.5, 0.5, 1), ncol=2,byrow=2)
@@ -46,7 +46,7 @@ neighbours. This method is fast since it relies only an a fast nearest neighbour
    newPts=matrix(c(0,0, 0.5, 0.3),ncol=2,byrow=TRUE)
    expectedVals=0.5*newPts[,1]+0.2*newPts[,2]+7
    out=triangular_interpolation(xy,vals,newPts)
-   stopifnot(all(all.equal(out,expectedVals)))
+   stopifnot(all.equal(out,expectedVals))
 
    # A point outside the triangle
    newPts=matrix(c(-1,0, -1, 1),ncol=2,byrow=TRUE)

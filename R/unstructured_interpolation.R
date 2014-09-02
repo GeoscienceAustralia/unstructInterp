@@ -9,9 +9,9 @@
 #'
 #' Basically a wrapper around the SearchTrees package
 #'
-#' @param xy = points (typically nx2 matrix)
-#' @param vals = values at xy (can be a matix with 1 or more colums)
-#' @param newPts = points where we want interpolated values (typically nx2 matrix)
+#' @param xy = points locations associated with values to interpolation from (typically nx2 matrix)
+#' @param vals = values at xy (can be a matix with 1 or more colums, and the same number of rows as xy)
+#' @param newPts = points where we want interpolated values (typically mx2 matrix)
 #' @return matrix/vector with as many columns as 'vals' and as many rows as 'newPts', containing the 'vals' interpolated to 'newPts'
 #' @export
 #' @import SearchTrees
@@ -22,7 +22,7 @@
 #'    newPts=matrix(c(0.1, 0.9, 0.9, 0.9), ncol=2, byrow=TRUE)
 #'
 #'    out=nearest_neighbour_interpolation(xy, vals, newPts)
-#'    stopifnot(all(all.equal(out, c(1,2))))
+#'    stopifnot(all.equal(out, c(1,2)))
 nearest_neighbour_interpolation<-function(xy, vals, newPts){
     #require(SearchTrees)
 
@@ -45,10 +45,10 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
 #' to ensure the interpolated value does not exceed the range of the xy
 #' neighbours. This method is fast since it relies only an a fast nearest neighbours implementation (via SearchTrees)
 #'
-#' @param xy = points (typically nx2 matrix)
-#' @param vals = values at xy (can be a matix with 1 or more colums)
-#' @param newPts = points where we want interpolated values (typically nx2 matrix)
-#' @param useNeaestNeighbour = TRUE/FALSE (effect described above)
+#' @param xy = point locations associated with the values to interpolate from  (typically nx2 matrix)
+#' @param vals = values at xy (can be a matix with 1 or more colums and the same number of rows as xy)
+#' @param newPts = points where we want interpolated values (typically mx2 matrix)
+#' @param useNearestNeighbour = TRUE/FALSE (effect described above)
 #' @return matrix/vector with as many columns as 'vals' and as many rows as 'newPts', containing the 'vals' interpolated to 'newPts'
 #' @export
 #' @import SearchTrees
@@ -60,13 +60,13 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
 #'    newPts=matrix(c(0.5, 0.5, 0.3, 0.3), ncol=2, byrow=TRUE)
 #'
 #'    out=triangular_interpolation(xy, vals, newPts)
-#'    stopifnot(all(all.equal(out, c(1.0,0.6))))
+#'    stopifnot(all.equal(out, c(1.0,0.6)))
 #'
 #'    # Re-order triangle
 #'    xy=xy[3:1,]
 #'    vals=vals[3:1]
 #'    out=triangular_interpolation(xy, vals, newPts)
-#'    stopifnot(all(all.equal(out,c(1.0,0.6))))
+#'    stopifnot(all.equal(out,c(1.0,0.6)))
 #'
 #'    #another one, with formula z=0.5*x+0.2*y+7
 #'    xy=matrix(c(-1, -1, 1, -0.5, 0.5, 1), ncol=2,byrow=2)
@@ -74,7 +74,7 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
 #'    newPts=matrix(c(0,0, 0.5, 0.3),ncol=2,byrow=TRUE)
 #'    expectedVals=0.5*newPts[,1]+0.2*newPts[,2]+7
 #'    out=triangular_interpolation(xy,vals,newPts)
-#'    stopifnot(all(all.equal(out,expectedVals)))
+#'    stopifnot(all.equal(out,expectedVals))
 #'
 #'    # A point outside the triangle 
 #'    newPts=matrix(c(-1,0, -1, 1),ncol=2,byrow=TRUE)
