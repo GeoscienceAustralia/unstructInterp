@@ -51,7 +51,7 @@ neighbours. This method is fast since it relies only an a fast nearest neighbour
    # A point outside the triangle
    newPts=matrix(c(-1,0, -1, 1),ncol=2,byrow=TRUE)
    out=triangular_interpolation(xy,vals,newPts,useNearestNeighbour=FALSE)
-   stopifnot(all(is.na(out))| formals(triangular_interpolation)$useNearestNeighbour)
+   stopifnot(all(is.na(out)))
    # Failure is expected here if using approximate triangulation based on nearest neighbour methods
 
    # A single point
