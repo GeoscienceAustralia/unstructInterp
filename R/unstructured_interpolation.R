@@ -1,13 +1,14 @@
 ######################################################################
 #
-# Here we have functions for nearest-neighbour and triangular interpolation
+# Here we have functions for nearest-neighbour and 'linear' (triangular)
+# interpolation of unstructured point data
 #
 # Author: Gareth Davies, Geoscience Australia 2014
 #
 #
     
 
-#' Function for neaest neighbour interpolation
+#' Function for nearest neighbour interpolation
 #'
 #' Basically a wrapper around the SearchTrees package
 #'
