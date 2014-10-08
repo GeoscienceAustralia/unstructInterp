@@ -2,6 +2,8 @@
 #
 # Here we have functions for nearest-neighbour and triangular interpolation
 #
+# Author: Gareth Davies, Geoscience Australia 2014
+#
 #
     
 
@@ -38,8 +40,11 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
 
 #' Function for various types of triangular ['linear'] interpolation of unstructured data. 
 #' 
+#' Delanay triangulation is supported, as well as a method based on linear interpolation 
+#' from the 3 nearest neighbour of the interpolation point, with limiting.
+#' 
 #' If useNearestNeighbour = FALSE then it provides a wrapper around the delanay triangulation used in the 'geometry' package.
-#' Unfortunately the look-up can be slow with this method for large point clouds.
+#' Unfortunately the look-up can be slow with this method for large point clouds. \cr
 #' If useNearestNeighbour=TRUE, we find the 3 nearest xy neighbours of each point to interpolate to, and
 #' interpolate using the plane defined by those 3 neighbours. Limiting is used
 #' to ensure the interpolated value does not exceed the range of the xy
@@ -150,8 +155,6 @@ triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
     }else{
         # Hack to try to speed-up tsearch on large problems.
         # Instead of using t-search, find the 3 nearest neighbours and make a triangle
-        #browser()
-        #triXY=(xy[triIndices[,1],1:2]+ xy[triIndices[,2],1:2] + xy[triIndices[,3],1:2])/3
         triTree=createTree(xy)
         # Lookup the nearest index on the tree
         lookupInds=knnLookup(triTree, newx=newPts[,1],newy=newPts[,2],k=3)
