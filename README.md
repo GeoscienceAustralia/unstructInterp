@@ -44,7 +44,7 @@ nonetheless welcome.
 If you'd like to contribute any routines or fix bugs, consider forking the
 code, inserting your changes and sending the maintainer a pull request.
 Otherwise bug reports / suggestions can be sent to the maintainer Gareth
-Davies, grothered at gmail dot com. 
+Davies, gareth.davies.ga.code@gmail.com 
 
 Note that the documentation in /man is auto-generated from within-code comments using the roxygen2 package.
 
