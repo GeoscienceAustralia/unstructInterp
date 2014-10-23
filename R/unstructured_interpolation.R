@@ -30,7 +30,7 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
     #require(SearchTrees)
 
     xyTree=createTree(xy)
-    newInds=knnLookup(xyTree, newx=newPts[,1], newy=newPts[,2], k=1)
+    newInds=knnLookup(xyTree, newx=newPts[,1], newy=newPts[,2], k=as.numeric(1))
 
     if(is.null(dim(vals))){
         return(vals[newInds])

@@ -18,8 +18,12 @@ triangular_interpolation(xy, vals, newPts, useNearestNeighbour = TRUE)
 matrix/vector with as many columns as 'vals' and as many rows as 'newPts', containing the 'vals' interpolated to 'newPts'
 }
 \description{
+Delanay triangulation is supported, as well as a method based on linear interpolation
+from the 3 nearest neighbour of the interpolation point, with limiting.
+}
+\details{
 If useNearestNeighbour = FALSE then it provides a wrapper around the delanay triangulation used in the 'geometry' package.
-Unfortunately the look-up can be slow with this method for large point clouds.
+Unfortunately the look-up can be slow with this method for large point clouds. \cr
 If useNearestNeighbour=TRUE, we find the 3 nearest xy neighbours of each point to interpolate to, and
 interpolate using the plane defined by those 3 neighbours. Limiting is used
 to ensure the interpolated value does not exceed the range of the xy
