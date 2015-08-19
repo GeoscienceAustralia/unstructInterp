@@ -17,7 +17,7 @@
 #' @param newPts = points where we want interpolated values (typically mx2 matrix)
 #' @return matrix/vector with as many columns as 'vals' and as many rows as 'newPts', containing the 'vals' interpolated to 'newPts'
 #' @export
-#' @import SearchTrees
+#' @import FNN
 #' @examples
 #'    # Make a single triangle in the plane z=x+y, and interpolate from it
 #'    xy=matrix(c(0,0,0,1,1,1),ncol=2,byrow=TRUE)
@@ -27,10 +27,9 @@
 #'    out=nearest_neighbour_interpolation(xy, vals, newPts)
 #'    stopifnot(all.equal(out, c(1,2)))
 nearest_neighbour_interpolation<-function(xy, vals, newPts){
-    #require(SearchTrees)
-
-    xyTree=createTree(xy)
-    newInds=knnLookup(xyTree, newx=newPts[,1], newy=newPts[,2], k=as.numeric(1))
+    
+    #require(FNN)
+    newInds = get.knnx(xy, newPts[,1:2, drop=FALSE], k=1)[[1]]
 
     if(is.null(dim(vals))){
         return(vals[newInds])
@@ -49,7 +48,7 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
 #' If useNearestNeighbour=TRUE, we find the 3 nearest xy neighbours of each point to interpolate to, and
 #' interpolate using the plane defined by those 3 neighbours. Limiting is used
 #' to ensure the interpolated value does not exceed the range of the xy
-#' neighbours. This method is fast since it relies only an a fast nearest neighbours implementation (via SearchTrees)
+#' neighbours. This method is fast since it relies only an a fast nearest neighbours implementation (via FNN)
 #'
 #' @param xy = point locations associated with the values to interpolate from  (typically nx2 matrix)
 #' @param vals = values at xy (can be a matix with 1 or more colums and the same number of rows as xy)
@@ -57,7 +56,7 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
 #' @param useNearestNeighbour = TRUE/FALSE (effect described above)
 #' @return matrix/vector with as many columns as 'vals' and as many rows as 'newPts', containing the 'vals' interpolated to 'newPts'
 #' @export
-#' @import SearchTrees
+#' @import FNN 
 #' @import geometry
 #' @examples
 #'    # Make a single triangle in the plane z=x+y, and interpolate from it
@@ -104,11 +103,11 @@ nearest_neighbour_interpolation<-function(xy, vals, newPts){
 #'    stopifnot(all(out==0.5*(vals[1]+vals[2])))
 triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
   
-    xy=as.matrix(xy,ncol=2)
-    newPts=as.matrix(newPts)
+    xy = as.matrix(xy,ncol=2)
+    newPts = as.matrix(newPts)
 
     if(!is.null(dim(vals))){
-        vals=as.matrix(vals)
+        vals = as.matrix(vals)
     }
  
     if(dim(xy)[1]<3 | is.null(dim(newPts))){
@@ -116,11 +115,11 @@ triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
     }
 
     if(is.null(dim(vals))){
-        if(length(vals)!=length(xy[,1])){
+        if(length(vals) != length(xy[,1])){
             stop('Length of xy[,1] and vals must be the same')
         }
     }else{
-        if(length(vals[,1])!=length(xy[,1])){
+        if(length(vals[,1]) != length(xy[,1])){
             stop('Length of xy[,1] and vals[,1] must be the same')
         }
         
@@ -128,97 +127,98 @@ triangular_interpolation<-function(xy, vals, newPts, useNearestNeighbour=TRUE){
  
     # Flag to say whether we use nearest-neighbours to define the triangulation
     #nnSort=(useNearestNeighbour & length(xy[,1])>3)
-    nnSort=useNearestNeighbour
+    nnSort = useNearestNeighbour
 
     if(!nnSort){
         # Use geometry package triangulation
         # This is slow for large problems [tsearch is presently slow], but
         # arguably the best approach
-        triIndices=delaunayn(xy)
+        triIndices = delaunayn(xy)
         # Use barycentric coordinates from tsearch
-        triOn=tsearch(xy[,1], xy[,2], triIndices, newPts[,1], newPts[,2], bary=TRUE)
+        triOn = tsearch(xy[,1], xy[,2], triIndices, newPts[,1], newPts[,2], bary=TRUE)
         if(is.null(dim(vals))){
             # Vals is a vector
-            final=vals[triIndices[triOn$idx,1]]*triOn$p[,1]+
-                  vals[triIndices[triOn$idx,2]]*triOn$p[,2]+
-                  vals[triIndices[triOn$idx,3]]*triOn$p[,3]
+            final = vals[triIndices[triOn$idx,1]]*triOn$p[,1]+
+                vals[triIndices[triOn$idx,2]]*triOn$p[,2]+
+                vals[triIndices[triOn$idx,3]]*triOn$p[,3]
 
         }else{
             # Vals is a matrix
-            final=matrix(NA,ncol=ncol(vals), nrow=nrow(newPts))
+            final = matrix(NA,ncol=ncol(vals), nrow=nrow(newPts))
             for(i in 1:ncol(final)){
-                final[,i]=vals[triIndices[triOn$idx,1],i]*triOn$p[,1]+
-                          vals[triIndices[triOn$idx,2],i]*triOn$p[,2]+
-                          vals[triIndices[triOn$idx,3],i]*triOn$p[,3]
+                final[,i] = vals[triIndices[triOn$idx,1],i]*triOn$p[,1]+
+                    vals[triIndices[triOn$idx,2],i]*triOn$p[,2]+
+                   vals[triIndices[triOn$idx,3],i]*triOn$p[,3]
             }
         }
 
     }else{
         # Hack to try to speed-up tsearch on large problems.
         # Instead of using t-search, find the 3 nearest neighbours and make a triangle
-        triTree=createTree(xy)
+        #triTree = createTree(xy)
         # Lookup the nearest index on the tree
-        lookupInds=knnLookup(triTree, newx=newPts[,1],newy=newPts[,2],k=3)
+        #lookupInds = knnLookup(triTree, newx=newPts[,1],newy=newPts[,2],k=3)
+        lookupInds = get.knnx(xy, newPts[,1:2, drop=FALSE], k=3)[[1]]
 
         ## Interpolate. 
         ## Get vertices
-        p1=matrix(xy[lookupInds[,1],], ncol=2)
-        p2=matrix(xy[lookupInds[,2],],ncol=2)
-        p3=matrix(xy[lookupInds[,3],], ncol=2)
+        p1 = matrix(xy[lookupInds[,1],], ncol=2)
+        p2 = matrix(xy[lookupInds[,2],],ncol=2)
+        p3 = matrix(xy[lookupInds[,3],], ncol=2)
        
         ## Get triangle gradient  
-        dx31=p3[,1]-p1[,1]
-        dy31=p3[,2]-p1[,2]
-        dx21=p2[,1]-p1[,1]
-        dy21=p2[,2]-p1[,2]
+        dx31 = p3[,1]-p1[,1]
+        dy31 = p3[,2]-p1[,2]
+        dx21 = p2[,1]-p1[,1]
+        dy21 = p2[,2]-p1[,2]
 
-        dxN=newPts[,1]-p1[,1]
-        dyN=newPts[,2]-p1[,2]
+        dxN = newPts[,1]-p1[,1]
+        dyN = newPts[,2]-p1[,2]
         #
         ## Compute triangle area
-        area= dx21*dy31-dx31*dy21 #dy21*dx31 - dx21*dy31
+        area = dx21*dy31-dx31*dy21 #dy21*dx31 - dx21*dy31
 
         # Gradient coefficients
         a = (dy31*dxN-dx31*dyN)/area 
         b = (-dy21*dxN+dx21*dyN)/area 
 
         # Treat cases with degenerate triangles -- use nearest-neighbour instead
-        EPS=1.0e-06
-        a[abs(area)<EPS]=0.
-        b[abs(area)<EPS]=0.
+        EPS = 1.0e-06
+        a[abs(area)<EPS] = 0.
+        b[abs(area)<EPS] = 0.
 
 
         if(is.null(dim(vals))){
             # Find max/min 'vals' on triangle
-            valsMax=pmax(vals[lookupInds[,1]], vals[lookupInds[,2]], vals[lookupInds[,3]])
-            valsmin=pmin(vals[lookupInds[,1]], vals[lookupInds[,2]], vals[lookupInds[,3]])
+            valsMax = pmax(vals[lookupInds[,1]], vals[lookupInds[,2]], vals[lookupInds[,3]])
+            valsmin = pmin(vals[lookupInds[,1]], vals[lookupInds[,2]], vals[lookupInds[,3]])
             
-            dz31=vals[lookupInds[,3]] - vals[lookupInds[,1]]
-            dz21=vals[lookupInds[,2]] - vals[lookupInds[,1]]
+            dz31 = vals[lookupInds[,3]] - vals[lookupInds[,1]]
+            dz21 = vals[lookupInds[,2]] - vals[lookupInds[,1]]
 
             final = vals[lookupInds[,1]] + a*dz21 + b*dz31
 
             # Limit
-            M=final>valsMax
-            m=final<valsmin
-            limit=pmax(M,m)
+            M = (final>valsMax)
+            m = (final<valsmin)
+            limit = pmax(M,m)
             final = final*(1-limit) + vals[lookupInds[,1]]*limit
         }else{
             # Vals is higher dimensional
 
             # Find max/min 'vals' on triangle
-            valsMax=pmax(vals[lookupInds[,1],], vals[lookupInds[,2],], vals[lookupInds[,3],])
-            valsmin=pmin(vals[lookupInds[,1],], vals[lookupInds[,2],], vals[lookupInds[,3],])
+            valsMax = pmax(vals[lookupInds[,1],], vals[lookupInds[,2],], vals[lookupInds[,3],])
+            valsmin = pmin(vals[lookupInds[,1],], vals[lookupInds[,2],], vals[lookupInds[,3],])
 
-            dz31=vals[lookupInds[,3],] - vals[lookupInds[,1],]
-            dz21=vals[lookupInds[,2],] - vals[lookupInds[,1],]
+            dz31 = vals[lookupInds[,3],] - vals[lookupInds[,1],]
+            dz21 = vals[lookupInds[,2],] - vals[lookupInds[,1],]
 
             final = vals[lookupInds[,1],] + a*dz21 + b*dz31
 
             # Limit
-            M=final>valsMax
-            m=final<valsmin
-            limit=pmax(M,m)
+            M = (final>valsMax)
+            m = (final<valsmin)
+            limit = pmax(M,m)
             # If outside min/max, use nearest neighbour only
             final = final*(1-limit) + vals[lookupInds[,1],]*limit
 

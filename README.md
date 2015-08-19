@@ -4,7 +4,7 @@ unstructInterp
 R routines for unstructured interpolation. A few methods are implemented which
 work relatively efficiently on semi-large datasets (e.g. millions of points).
 
-The code relies heavily on other packages (SearchTrees + geometry), and its
+The code relies heavily on other packages (FNN + geometry), and its
 purpose is mainly to provide a convenient interface to some efficient interpolation
 methods (and save us hacking to use them elsewhere!), rather than on developing
 novel interpolation methods.
@@ -14,14 +14,14 @@ and only a few methods are supported here.
 
 Installation
 ------------
-Make sure you have the 'devtools', 'SearchTrees', and 'geometry' package installed in R:
->    install.packages(c('devtools','SearchTrees','geometry'))
+Make sure you have the 'devtools', 'FNN', and 'geometry' package installed in R:
+>    install.packages(c('devtools','FNN','geometry'))
 
 Then you can install direct from github
 
 >    install_github('GeoscienceAustralia/unstructInterp')
 
-To get started, look at the examples and help:
+To get started, look at the examples (which also function as unit tests) and help:
 
 > library(unstructInterp)
 >

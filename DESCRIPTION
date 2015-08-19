@@ -8,7 +8,7 @@ Author: Gareth Davies
 Maintainer: Gareth Davies <gareth.davies.ga.code@gmail.com>
 Depends:
     R (>= 1.8.0),
-    SearchTrees,
+    FNN,
     geometry
 Description: Routines for interpolation from unstructured point data. Mainly
     wrappers around existing tools, with a focus on efficiency for applications
