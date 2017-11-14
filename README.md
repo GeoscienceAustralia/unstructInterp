@@ -48,10 +48,12 @@ Davies, gareth.davies.ga.code@gmail.com
 
 Note that the documentation in /man is auto-generated from within-code comments using the roxygen2 package.
 
-## License
+License
+-------
 This code is licensed under a BAD 3-clause license. See the [license deed](LICENSE) for details
 
-## Contaces
+Contaces
+--------
 **Gareth Davies**  
 *Lead Devloper*  
 <gareth.davies@ga.gov.au>  
